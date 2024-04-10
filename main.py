@@ -25,8 +25,6 @@ options.add_argument('start-maximized')
 options.add_experimental_option('detach', True)
 driver = webdriver.Chrome(options=options)
 driver.implicitly_wait(15)
-#driver.get('https://candidaturas.ine.mx/')
-
 actions = ActionChains(driver)
 
 
@@ -49,7 +47,6 @@ def select_category(category_no):
 def get_links(cat_no):
     candidates = []
     container = driver.find_element(By.CSS_SELECTOR, 'tbody[class="ant-table-tbody"]')
-    #links = container.find_elements(By.XPATH, './div[@class="div-FConsulta"]/following-sibling::*[1]')
     links = container.find_elements(By.CSS_SELECTOR, 'a')
 
     if cat_no == 1:
@@ -66,8 +63,6 @@ def get_links(cat_no):
 def get_page_count():
     return int(driver.find_element(By.XPATH, '//li[@title="Página siguiente"]/preceding-sibling::*[1]').get_attribute('title'))
 
-
-# select_category(category[1])
 
 for category_no in range(1, 6):
 
@@ -87,7 +82,6 @@ for category_no in range(1, 6):
             actions.move_to_element(next_button).perform()
             next_button.click()
 
-        # select_category(category[category_no])
         candidate_links = get_links(category_no)
 
         for i, link in enumerate(candidate_links):
@@ -125,12 +119,7 @@ for category_no in range(1, 6):
                 break
             except:
                 pass
-        # try:
-        #     next_button = driver.find_element(By.XPATH, '//li[@title="Página siguiente"]/button')
-        #     for _ in range(page):
-        #         next_button.click()
-        # except:
-        #     pass
+       
 
     df = pd.DataFrame(cat_dict[category_no-1])
     df.to_excel(f'{category_no}.xlsx')
